@@ -39,7 +39,10 @@ class EntidadeFormPage extends StatelessWidget {
                   return fieldContent.isEmpty ? 'Nome é obrigatório' : null;
                 },
                 onSaved: (String? nome) {
-                  store.entidade?.nome = nome ?? '';
+                  if (store.entidade?.nome != nome) {
+                    store.entidade?.nome = nome ?? '';
+                    store.sofreuAlteracao = true;
+                  }
                 },
               ),
               const SizedBox(height: 20),
@@ -55,7 +58,10 @@ class EntidadeFormPage extends StatelessWidget {
                       : null;
                 },
                 onSaved: (String? descricao) {
-                  store.entidade?.descricao = descricao ?? '';
+                  if (store.entidade?.descricao != descricao) {
+                    store.entidade?.descricao = descricao ?? '';
+                    store.sofreuAlteracao = true;
+                  }
                 },
               ),
               const SizedBox(height: 20),

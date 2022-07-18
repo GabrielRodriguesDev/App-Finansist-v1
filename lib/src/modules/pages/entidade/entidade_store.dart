@@ -1,6 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:finansist_v1/src/modules/components/custom_snackbar/custom_snackbar.dart';
+import 'package:finansist_v1/src/modules/components/custom_snackbar/custom_snackbar_store.dart';
 import 'package:finansist_v1/src/modules/domain/interfaces/services/i_entidade_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -19,6 +19,7 @@ class EntidadeStore = _EntidadeStore with _$EntidadeStore;
 abstract class _EntidadeStore with Store {
   final IEntidadeRepository _entidadeRepository;
   final IEntidadeService _entidadeService;
+  final CustomSnackBarStore storeSnackBar = Modular.get();
 
   _EntidadeStore(this._entidadeRepository, this._entidadeService);
   @observable
@@ -30,6 +31,9 @@ abstract class _EntidadeStore with Store {
   @observable
   Entidade? entidade;
 
+  @observable
+  bool sofreuAlteracao = false;
+
   @action
   Future<void> pesquisarEntidades() async {
     entidades.clear();
@@ -40,7 +44,7 @@ abstract class _EntidadeStore with Store {
       (l) async {
         if (!l.success!) {
           snackbarKey.currentState?.showSnackBar(
-            CustomSnackBar.showCustomSnackBar(
+            storeSnackBar.showCustomSnackBar(
                 'Erro', l.message!, ContentType.failure),
           );
           isLoading = false;
@@ -62,26 +66,23 @@ abstract class _EntidadeStore with Store {
         snackbarKey.currentState?.hideCurrentSnackBar();
         snackbarKey.currentState
             ?.showSnackBar(
-              CustomSnackBar.showCustomSnackBar(
+              storeSnackBar.showCustomSnackBar(
                   'Erro', l.message!, ContentType.failure),
             )
             .closed
-            .then((SnackBarClosedReason reason) {
-          print('fechei 1');
-        });
+            .then((SnackBarClosedReason reason) {});
         Modular.to.pop();
       }
     }, (r) async {
       snackbarKey.currentState?.hideCurrentSnackBar();
       snackbarKey.currentState
           ?.showSnackBar(
-            CustomSnackBar.showCustomSnackBar(
+            storeSnackBar.showCustomSnackBar(
                 'Sucesso', 'Entidade salva com sucesso.', ContentType.success),
           )
           .closed
           .then((SnackBarClosedReason reason) {
-        print('fechei 2');
-        CustomSnackBar.showingSnackbar = false;
+        storeSnackBar.showingSnackbar = false;
       });
       entidade = null;
       Modular.to.pop();

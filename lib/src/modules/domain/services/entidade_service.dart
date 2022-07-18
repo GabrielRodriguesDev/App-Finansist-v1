@@ -13,7 +13,6 @@ class EntidadeService implements IEntidadeService {
       Entidade? entidade) async {
     if (entidade != null && entidade.id == null) {
       return _entidadeRepository.criarEntidade(entidade);
-      //return _entidadeRepository.atualizarEntidade(entidade)
     }
     return _entidadeRepository.atualizarEntidade(entidade);
   }

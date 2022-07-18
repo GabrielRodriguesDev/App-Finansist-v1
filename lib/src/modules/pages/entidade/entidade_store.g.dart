@@ -57,6 +57,22 @@ mixin _$EntidadeStore on _EntidadeStore, Store {
     });
   }
 
+  late final _$sofreuAlteracaoAtom =
+      Atom(name: '_EntidadeStore.sofreuAlteracao', context: context);
+
+  @override
+  bool get sofreuAlteracao {
+    _$sofreuAlteracaoAtom.reportRead();
+    return super.sofreuAlteracao;
+  }
+
+  @override
+  set sofreuAlteracao(bool value) {
+    _$sofreuAlteracaoAtom.reportWrite(value, super.sofreuAlteracao, () {
+      super.sofreuAlteracao = value;
+    });
+  }
+
   late final _$pesquisarEntidadesAsyncAction =
       AsyncAction('_EntidadeStore.pesquisarEntidades', context: context);
 
@@ -93,7 +109,8 @@ mixin _$EntidadeStore on _EntidadeStore, Store {
     return '''
 entidades: ${entidades},
 isLoading: ${isLoading},
-entidade: ${entidade}
+entidade: ${entidade},
+sofreuAlteracao: ${sofreuAlteracao}
     ''';
   }
 }

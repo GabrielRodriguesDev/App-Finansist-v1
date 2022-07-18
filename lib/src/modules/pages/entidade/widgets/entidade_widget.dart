@@ -51,9 +51,10 @@ class _EntidadeWidgetState extends State<EntidadeWidget> {
                       return InkWell(
                         onTap: () {
                           store.entidade = entidadeTemp;
-                          Modular.to
-                              .pushNamed(rotaEntidadeForm)
-                              .then((value) => store.pesquisarEntidades());
+                          Modular.to.pushNamed(rotaEntidadeForm).then((value) {
+                            store.pesquisarEntidades();
+                            store.entidade = null;
+                          });
                         },
                         child: EntidadeCardWidget(
                           titulo: entidadeTemp.nome.toString(),

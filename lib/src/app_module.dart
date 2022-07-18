@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:finansist_v1/src/modules/components/custom_snackbar/custom_snackbar_store.dart';
 import 'package:finansist_v1/src/modules/domain/repository/entidade_repository.dart';
 import 'package:finansist_v1/src/modules/infra/utils/constantes.dart';
 import 'package:finansist_v1/src/modules/pages/entidade/entidade_module.dart';
@@ -6,6 +7,7 @@ import 'package:finansist_v1/src/modules/pages/home/home_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'modules/domain/services/entidade_service.dart';
 import 'modules/infra/utils/dio/custom_dio.dart';
+
 import 'modules/pages/home/home_module.dart';
 
 class AppModule extends Module {
@@ -15,6 +17,7 @@ class AppModule extends Module {
         Bind.lazySingleton((i) => CustomDio(i())),
         Bind.lazySingleton((i) => EntidadeRepository(i())),
         Bind.lazySingleton((i) => EntidadeService(i())),
+        Bind.singleton((i) => CustomSnackBarStore()),
       ];
 
   @override
