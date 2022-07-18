@@ -2,6 +2,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:finansist_v1/src/modules/components/custom_snackbar/custom_snackbar.dart';
 import 'package:finansist_v1/src/modules/domain/interfaces/services/i_entidade_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -31,6 +32,7 @@ abstract class _EntidadeStore with Store {
 
   @action
   Future<void> pesquisarEntidades() async {
+    entidades.clear();
     isLoading = true;
     var pesquisarModel = PesquisarModel(texto: '', ativo: true);
     var response = await _entidadeRepository.pesquisar(pesquisarModel);
@@ -58,20 +60,31 @@ abstract class _EntidadeStore with Store {
     respose.fold((l) async {
       if (!l.success!) {
         snackbarKey.currentState?.hideCurrentSnackBar();
-        snackbarKey.currentState?.showSnackBar(
-          CustomSnackBar.showCustomSnackBar(
-              'Erro', l.message!, ContentType.failure),
-        );
-        Modular.to.pushNamed(rotaEntidade);
+        snackbarKey.currentState
+            ?.showSnackBar(
+              CustomSnackBar.showCustomSnackBar(
+                  'Erro', l.message!, ContentType.failure),
+            )
+            .closed
+            .then((SnackBarClosedReason reason) {
+          print('fechei 1');
+        });
+        Modular.to.pop();
       }
     }, (r) async {
       snackbarKey.currentState?.hideCurrentSnackBar();
-      snackbarKey.currentState?.showSnackBar(
-        CustomSnackBar.showCustomSnackBar(
-            'Sucesso', 'Entidade salva com sucesso.', ContentType.success),
-      );
+      snackbarKey.currentState
+          ?.showSnackBar(
+            CustomSnackBar.showCustomSnackBar(
+                'Sucesso', 'Entidade salva com sucesso.', ContentType.success),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        print('fechei 2');
+        CustomSnackBar.showingSnackbar = false;
+      });
       entidade = null;
-      Modular.to.popAndPushNamed(rotaEntidade);
+      Modular.to.pop();
     });
   }
 

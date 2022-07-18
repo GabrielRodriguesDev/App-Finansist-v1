@@ -2,8 +2,10 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {
+  static bool showingSnackbar = false;
   static SnackBar showCustomSnackBar(
       String title, String mensage, ContentType type) {
+    showingSnackbar = true;
     return SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
