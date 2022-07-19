@@ -10,4 +10,7 @@ abstract class IEntidadeRepository {
 
   Future<Either<ResultGeneric, Entidade?>> atualizarEntidade(
       Entidade? entidade);
+
+  Future<Either<ResultGeneric, ResultGeneric>> deletarEntidade(
+      Entidade? entidade);
 }

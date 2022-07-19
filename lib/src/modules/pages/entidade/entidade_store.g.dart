@@ -90,6 +90,15 @@ mixin _$EntidadeStore on _EntidadeStore, Store {
     return _$saveEntidadeAsyncAction.run(() => super.saveEntidade());
   }
 
+  late final _$deletarEntidadeAsyncAction =
+      AsyncAction('_EntidadeStore.deletarEntidade', context: context);
+
+  @override
+  Future<void> deletarEntidade(Entidade entidade) {
+    return _$deletarEntidadeAsyncAction
+        .run(() => super.deletarEntidade(entidade));
+  }
+
   late final _$_EntidadeStoreActionController =
       ActionController(name: '_EntidadeStore', context: context);
 

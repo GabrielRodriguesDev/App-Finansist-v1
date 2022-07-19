@@ -16,4 +16,17 @@ class EntidadeService implements IEntidadeService {
     }
     return _entidadeRepository.atualizarEntidade(entidade);
   }
+
+  @override
+  Future<Either<ResultGeneric, ResultGeneric>> deletarEntidade(
+      Entidade? entidade) async {
+    if (entidade!.id == null || entidade.id!.isEmpty) {
+      return left(ResultGeneric(
+          success: false,
+          message:
+              "Por favor informe o id da conferencia, contate um administrador do sistema",
+          data: null));
+    }
+    return _entidadeRepository.deletarEntidade(entidade);
+  }
 }

@@ -2,6 +2,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:finansist_v1/src/modules/components/custom_snackbar/custom_snackbar_store.dart';
 import 'package:finansist_v1/src/modules/domain/interfaces/services/i_entidade_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -36,6 +37,9 @@ abstract class _EntidadeStore with Store {
 
   @action
   Future<void> pesquisarEntidades() async {
+    if (kDebugMode) {
+      print('pesquisando');
+    }
     entidades.clear();
     isLoading = true;
     var pesquisarModel = PesquisarModel(texto: '', ativo: true);
@@ -52,6 +56,9 @@ abstract class _EntidadeStore with Store {
         }
       },
       (r) async {
+        if (kDebugMode) {
+          print('pesquisando e atualizando a lista');
+        }
         setTodasEntidades(r);
         isLoading = false;
       },
@@ -64,13 +71,10 @@ abstract class _EntidadeStore with Store {
     respose.fold((l) async {
       if (!l.success!) {
         snackbarKey.currentState?.hideCurrentSnackBar();
-        snackbarKey.currentState
-            ?.showSnackBar(
-              storeSnackBar.showCustomSnackBar(
-                  'Erro', l.message!, ContentType.failure),
-            )
-            .closed
-            .then((SnackBarClosedReason reason) {});
+        snackbarKey.currentState?.showSnackBar(
+          storeSnackBar.showCustomSnackBar(
+              'Erro', l.message!, ContentType.failure),
+        );
         Modular.to.pop();
       }
     }, (r) async {
@@ -86,6 +90,36 @@ abstract class _EntidadeStore with Store {
       });
       entidade = null;
       Modular.to.pop();
+    });
+  }
+
+  @action
+  Future<void> deletarEntidade(Entidade entidade) async {
+    var respose = await _entidadeService.deletarEntidade(entidade);
+    respose.fold((l) async {
+      if (!l.success!) {
+        snackbarKey.currentState?.hideCurrentSnackBar();
+        snackbarKey.currentState
+            ?.showSnackBar(
+              storeSnackBar.showCustomSnackBar(
+                  'Erro', l.message!, ContentType.failure),
+            )
+            .closed
+            .then((SnackBarClosedReason reason) {
+          storeSnackBar.showingSnackbar = false;
+        });
+      }
+    }, (r) {
+      snackbarKey.currentState?.hideCurrentSnackBar();
+      snackbarKey.currentState
+          ?.showSnackBar(
+            storeSnackBar.showCustomSnackBar('Sucesso',
+                'Entidade removida com sucesso.', ContentType.success),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        storeSnackBar.showingSnackbar = false;
+      });
     });
   }
 

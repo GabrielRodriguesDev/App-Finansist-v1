@@ -94,4 +94,29 @@ class EntidadeRepository implements IEntidadeRepository {
       return left(result);
     }
   }
+
+  @override
+  Future<Either<ResultGeneric, ResultGeneric>> deletarEntidade(
+      Entidade? entidade) async {
+    try {
+      Response respose = await dio.client
+          .delete('https://10.0.2.2:7174/Entidade/${entidade?.id}');
+      if (respose.data != null) {
+        return right(ResultGeneric.fromJson(respose.data));
+      }
+      return right(ResultGeneric());
+    } on DioError catch (e) {
+      var result =
+          ResultGeneric(success: false, message: e.message, data: null);
+      return left(result);
+    } on TypeError catch (e) {
+      var result =
+          ResultGeneric(success: false, message: e.toString(), data: null);
+      return left(result);
+    } on FormatException catch (e) {
+      var result =
+          ResultGeneric(success: false, message: e.toString(), data: null);
+      return left(result);
+    }
+  }
 }

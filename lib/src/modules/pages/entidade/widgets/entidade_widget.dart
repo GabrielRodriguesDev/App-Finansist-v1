@@ -48,17 +48,26 @@ class _EntidadeWidgetState extends State<EntidadeWidget> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       var entidadeTemp = store.entidades[index];
-                      return InkWell(
-                        onTap: () {
-                          store.entidade = entidadeTemp;
-                          Modular.to.pushNamed(rotaEntidadeForm).then((value) {
-                            store.pesquisarEntidades();
-                            store.entidade = null;
-                          });
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (_) {
+                          store.deletarEntidade(entidadeTemp);
                         },
-                        child: EntidadeCardWidget(
-                          titulo: entidadeTemp.nome.toString(),
-                          subtitlo: entidadeTemp.descricao,
+                        child: InkWell(
+                          onTap: () {
+                            store.entidade = entidadeTemp;
+                            Modular.to
+                                .pushNamed(rotaEntidadeForm)
+                                .then((value) {
+                              store.pesquisarEntidades();
+                              store.entidade = null;
+                            });
+                          },
+                          child: EntidadeCardWidget(
+                            titulo: entidadeTemp.nome.toString(),
+                            subtitlo: entidadeTemp.descricao,
+                          ),
                         ),
                       );
                     },
